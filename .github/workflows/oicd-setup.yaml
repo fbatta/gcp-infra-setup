@@ -56,10 +56,6 @@ jobs:
             - id: gcloud-info
               name: Print CLI info
               run: gcloud info
-            
-            - id: enable-iamcredentials-api
-              name: Enable IAM credentials API
-              run: gcloud services enable iamcredentials.googleapis.com
 
             - id: create-pool
               name: Create Workload identity pool
