@@ -1,0 +1,106 @@
+name: Setup OIDC for a GCP project to use with Github
+on:
+    workflow_dispatch:
+        inputs:
+            projectId:
+                required: true
+                type: string
+                description: The GCP project id for which to set up OIDC
+            repo:
+                required: true
+                type: string
+                description: The repo name allowed to impersonate the role (format org/repo-name)
+            serviceAccountName:
+                required: true
+                type: string
+                description: Name of the service account
+            createServiceAccount:
+                required: true
+                type: boolean
+                description: If true, create a new service account
+            poolName:
+                required: true
+                type: string
+                description: Name of the workload identity pool
+            createPool:
+                required: true
+                description: If true, create a new workload identity pool
+                type: boolean
+            providerName:
+                required: true
+                description: Name of the workload identity provider (e.g. github)
+                type: string
+            createProvider:
+                required: true
+                description: If true, create a new workload identity provider
+                type: boolean
+
+jobs:
+    oidc-setup:
+        runs-on: ubuntu-latest
+        outputs:
+            providerId: ${{ steps.get-provider-id.outputs.PROVIDER_ID }}
+        steps:
+            - id: gcp-auth
+              name: Authenticate with GCP
+              uses: google-github-actions/auth@v1
+              with:
+                credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+                project_id: ${{ inputs.projectId }}
+
+            - id: gcloud-setup
+              name: Setup CLI
+              uses: google-github-actions/setup-gcloud@v1
+
+            - id: gcloud-info
+              name: Print CLI info
+              run: gcloud info
+            
+            - id: enable-iamcredentials-api
+              name: Enable IAM credentials API
+              run: gcloud services enable iamcredentials.googleapis.com
+
+            - id: create-pool
+              name: Create Workload identity pool
+              if: ${{ inputs.createPool }}
+              run: >-
+                gcloud iam workload-identity-pools create "${{ inputs.poolName }}"
+                   --location="global"
+                   --display-name="${{ inputs.poolName }}"
+            
+            - id: get-pool-id
+              name: Get pool ID
+              run: >-
+                echo "::set-output name=POOL_ID::$(
+                    gcloud iam workload-identity-pools describe "${{ inputs.poolName }}"
+                    --location="global"
+                    --format="value(name)"
+                )"
+            
+            - id: create-provider
+              name: Create workload identity provider
+              if: ${{ inputs.createProvider }}
+              run: >-
+                gcloud iam workload-identity-pools providers create-oidc "${{ inputs.providerName }}"
+                --location="global"
+                --workload-identity-pool="${{ inputs.poolName }}"
+                --display-name="${{ inputs.providerName }}"
+                --attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository"
+                --issuer-uri="https://token.actions.githubusercontent.com"
+            
+            - id: map-sa-to-repo
+              name: Add Github repo to allowed impersonators
+              run: >-
+                gcloud iam service-accounts add-iam-policy-binding "${{ inputs.serviceAccountName }}@${{ inputs.projectId }}.iam.gserviceaccount.com"
+                --role="roles/iam.workloadIdentityUser"
+                --member="principalSet://iam.googleapis.com/${{ steps.get-pool-id.outputs.POOL_ID }}/attribute.repository/${{ inputs.repo }}"
+
+            - id: get-provider-id
+              name: Get workload identity provider ID
+              run: >-
+                echo "::set-output name=PROVIDER_ID::$(
+                    gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}"
+                    --location="global"
+                    --workload-identity-pool="${{ inputs.poolName }}"
+                    --format="value(name)"
+                )"
