@@ -1,4 +1,4 @@
-name: Setup OIDC for a GCP project to use with Github
+name: Github OIDC setup
 on:
     workflow_dispatch:
         inputs:
@@ -63,14 +63,14 @@ jobs:
             - id: create-pool
               name: Create Workload identity pool
               if: ${{ inputs.createPool }}
-              run: >-
+              run: >
                 gcloud iam workload-identity-pools create "${{ inputs.poolName }}"
                    --location="global"
                    --display-name="${{ inputs.poolName }}"
             
             - id: get-pool-id
               name: Get pool ID
-              run: >-
+              run: >
                 echo "::set-output name=POOL_ID::$(
                     gcloud iam workload-identity-pools describe "${{ inputs.poolName }}"
                     --location="global"
@@ -80,7 +80,7 @@ jobs:
             - id: create-provider
               name: Create workload identity provider
               if: ${{ inputs.createProvider }}
-              run: >-
+              run: >
                 gcloud iam workload-identity-pools providers create-oidc "${{ inputs.providerName }}"
                 --location="global"
                 --workload-identity-pool="${{ inputs.poolName }}"
@@ -90,14 +90,14 @@ jobs:
             
             - id: map-sa-to-repo
               name: Add Github repo to allowed impersonators
-              run: >-
+              run: >
                 gcloud iam service-accounts add-iam-policy-binding "${{ inputs.serviceAccountName }}@${{ inputs.projectId }}.iam.gserviceaccount.com"
                 --role="roles/iam.workloadIdentityUser"
                 --member="principalSet://iam.googleapis.com/${{ steps.get-pool-id.outputs.POOL_ID }}/attribute.repository/${{ inputs.repo }}"
 
             - id: get-provider-id
               name: Get workload identity provider ID
-              run: >-
+              run: >
                 echo "::set-output name=PROVIDER_ID::$(
                     gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}"
                     --location="global"
