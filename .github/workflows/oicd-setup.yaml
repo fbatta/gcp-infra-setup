@@ -96,8 +96,8 @@ jobs:
               name: Get workload identity provider ID
               run: >
                 echo "PROVIDER_ID=$(
-                    gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}"
-                    --location="global"
-                    --workload-identity-pool="${{ inputs.poolName }}"
+                    gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}" \
+                    --location="global" \
+                    --workload-identity-pool="${{ inputs.poolName }}" \
                     --format="value(name)"
                 )" >> $GITHUB_OUTPUT
