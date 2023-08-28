@@ -68,11 +68,11 @@ jobs:
             - id: get-pool-id
               name: Get pool ID
               run: >
-                echo "::set-output name=POOL_ID::$(
-                    gcloud iam workload-identity-pools describe "${{ inputs.poolName }}"
-                    --location="global"
+                echo "POOL_ID=$(
+                    gcloud iam workload-identity-pools describe "${{ inputs.poolName }}" \
+                    --location="global" \
                     --format="value(name)"
-                )"
+                )" >> $GITHUB_OUTPUT
             
             - id: create-provider
               name: Create workload identity provider
@@ -95,9 +95,9 @@ jobs:
             - id: get-provider-id
               name: Get workload identity provider ID
               run: >
-                echo "::set-output name=PROVIDER_ID::$(
+                echo "PROVIDER_ID=$(
                     gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}"
                     --location="global"
                     --workload-identity-pool="${{ inputs.poolName }}"
                     --format="value(name)"
-                )"
+                )" >> $GITHUB_OUTPUT
