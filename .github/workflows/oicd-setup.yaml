@@ -1,6 +1,6 @@
 name: Github OIDC setup
 on:
-    workflow_dispatch:
+  workflow_dispatch:
         inputs:
             projectId:
                 required: true
@@ -19,17 +19,19 @@ on:
                 type: boolean
                 description: If true, create a new service account
             poolName:
-                required: true
+                required: false
                 type: string
                 description: Name of the workload identity pool
+                default: default-pool
             createPool:
                 required: true
-                description: If true, create a new workload identity pool
+                description: If true, create a new w`orkload identity pool
                 type: boolean
             providerName:
-                required: true
+                required: false
                 description: Name of the workload identity provider (e.g. github)
                 type: string
+                default: github
             createProvider:
                 required: true
                 description: If true, create a new workload identity provider
@@ -96,8 +98,8 @@ jobs:
                 echo "## Worload Identity Provider ID" >> $GITHUB_STEP_SUMMARY
                 echo "Use the value below when setting up your Github actions in the destination repository" >> $GITHUB_STEP_SUMMARY
                 echo "```" >> $GITHUB_STEP_SUMMARY
-                echo "gcloud iam workload-identity-pools providers describe \"${{ inputs.providerName }}\" \
-                --location=\"global\" \
-                --workload-identity-pool=\"${{ inputs.poolName }}\" \
-                --format=\"value(name)\"" >> $GITHUB_STEP_SUMMARY
+                echo "$(gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}" \
+                --location="global" \
+                --workload-identity-pool="${{ inputs.poolName }}" \
+                --format="value(name)")" >> $GITHUB_STEP_SUMMARY
                 echo "```" >> $GITHUB_STEP_SUMMARY
