@@ -98,7 +98,7 @@ jobs:
                 echo "## Worload Identity Provider ID" >> $GITHUB_STEP_SUMMARY
                 echo "Use the value below when setting up your Github actions in the destination repository" >> $GITHUB_STEP_SUMMARY
                 echo "```" >> $GITHUB_STEP_SUMMARY
-                echo "$(gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}" \
+                echo "PROVIDER_ID=$(gcloud iam workload-identity-pools providers describe "${{ inputs.providerName }}" \
                 --location="global" \
                 --workload-identity-pool="${{ inputs.poolName }}" \
                 --format="value(name)")" >> $GITHUB_STEP_SUMMARY
