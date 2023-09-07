@@ -54,7 +54,6 @@ jobs:
             - id: attach-bucket-to-sa
               name: Allow bucket access to service account
               run: >
-                gcloud iam service-accounts add-iam-policy-binding ${{ inputs.projectId }}
-                --member="serviceAccount:${{ inputs.saName }}@${{ inputs.projectId }}.iam.gserviceaccount.com"
-                --role="roles/storage.objectAdmin"
-                --condition='expression=resource.type == "storage.googleapis.com/Object" && resource.name.startsWith("projects/_/buckets/${{ inputs.projectId }}-${{ inputs.bucketSuffix }}/"),title=access_to_stack_bucket,description=Allow access only to the stack bucket'
+                gsutil iam ch
+                serviceAccount:${{ inputs.saName }}@${{ inputs.projectId }}.iam.gserviceaccount.com:objectAdmin
+                gs://${{ inputs.projectId }}-${{ inputs.bucketSuffix }}
