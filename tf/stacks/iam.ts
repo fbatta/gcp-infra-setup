@@ -36,9 +36,9 @@ export class IamStack extends TerraformStack {
     });
 
     const role = new ProjectIamCustomRole(this, "deployer-role", {
-      roleId: "stack.deployer",
-      title: "Stack deployer",
-      description: "Set of permissions needed to deploy a stack on GCP",
+      roleId: "github.deployer",
+      title: "Github deployer",
+      description: "Set of permissions needed to deploy a stack through GH actions on GCP",
       stage: "GA",
       permissions,
     });
