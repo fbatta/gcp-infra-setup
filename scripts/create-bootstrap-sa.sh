@@ -40,8 +40,10 @@ if [ -z "$PROJECT_INDEX" ]; then
     exit 1
 fi
 
-# Enable IAM APIs
+# Enable essential APIs
 gcloud services enable iam.googleapis.com \
+    --project="${PROJECT_ID}"
+gcloud services enable cloudresourcemanager.googleapis.com \
     --project="${PROJECT_ID}"
 
 # Create new SA used for bootstrapping

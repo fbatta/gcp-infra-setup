@@ -2,14 +2,32 @@ title: Infra bootstrap
 description: Set of permissions needed to bootstrap a new project
 stage: GA
 includedPermissions:
+- iam.serviceAccounts.get
 - iam.serviceAccounts.create
+- iam.serviceAccounts.delete
 - iam.serviceAccounts.enable
+- iam.serviceAccounts.getIamPolicy
 - iam.serviceAccounts.setIamPolicy
-- iam.googleapis.com/workloadIdentityPools.create
+- iam.roles.get
+- iam.roles.list
+- iam.roles.create
+- iam.roles.delete
+- iam.roles.undelete
+- iam.googleapis.com/workloadIdentityPools.list
 - iam.googleapis.com/workloadIdentityPools.get
-- iam.googleapis.com/workloadIdentityPoolProviders.create
+- iam.googleapis.com/workloadIdentityPools.create
+- iam.googleapis.com/workloadIdentityPools.delete
+- iam.googleapis.com/workloadIdentityPools.undelete
+- iam.googleapis.com/workloadIdentityPoolProviders.list
 - iam.googleapis.com/workloadIdentityPoolProviders.get
+- iam.googleapis.com/workloadIdentityPoolProviders.create
+- iam.googleapis.com/workloadIdentityPoolProviders.delete
+- iam.googleapis.com/workloadIdentityPoolProviders.undelete
+- storage.buckets.list
+- storage.buckets.get
 - storage.buckets.create
+- storage.buckets.delete
+- storage.buckets.getIamPolicy
 - storage.buckets.setIamPolicy
 - resourcemanager.projects.getIamPolicy
 - resourcemanager.projects.setIamPolicy
