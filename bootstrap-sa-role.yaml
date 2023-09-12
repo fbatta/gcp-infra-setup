@@ -11,3 +11,5 @@ includedPermissions:
 - iam.googleapis.com/workloadIdentityPoolProviders.get
 - storage.buckets.create
 - storage.buckets.setIamPolicy
+- resourcemanager.projects.getIamPolicy
+- resourcemanager.projects.setIamPolicy

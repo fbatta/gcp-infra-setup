@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - `gcloud` CLI
-- `jq`
+- `jq` (on macOS, can be installed with `brew install jq`)
 - The project ID that you want to target
 
 ### Very first run
@@ -23,8 +23,10 @@ gcloud auth login
 Now, let's run the `create-bootstrap-sa.sh` bash script:
 
 ```
-sh ./scripts/create-bootstrap-sa.sh your-project-id-here
+sh ./scripts/create-bootstrap-sa.sh project-id region
 ```
+
+Replace `project-id` and `region` with the relevant values for your project.
 
 ### Result
 

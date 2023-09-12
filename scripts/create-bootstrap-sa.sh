@@ -1,10 +1,17 @@
 # Make sure project id is passed as an argument
 if [ -z "$1" ]; then
-    echo "No project ID provided"
+    echo "No project ID provided."
+    exit 1
+fi
+
+# Make sure the region is provided
+if [-z "$2" ]; then
+    echo "No region provided."
     exit 1
 fi
 
 PROJECT_ID=$1
+REGION=$2
 ROLE_NAME=infra.bootstrap
 PRIVATE_KEY_FILENAME=sa_key.json
 SA_ID=infra-bootstrap
@@ -64,3 +71,16 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 # Create and download a SA key
 gcloud iam service-accounts keys create ./${PRIVATE_KEY_FILENAME} \
     --iam-account="${SA_EMAIL}"
+
+BUCKET_NAME=gs://$1-infra-bootstrap-stack
+
+# Create stack bucket
+gcloud storage buckets create ${BUCKET_NAME} \
+    --project=$1 \
+    --location=${REGION} \
+    --uniform-bucket-level-access
+
+# Give the SA access to the bucket
+gsutil iam ch \
+    serviceAccount:${SA_ID}@$1.iam.gserviceaccount.com:objectAdmin \
+    ${BUCKET_NAME}
