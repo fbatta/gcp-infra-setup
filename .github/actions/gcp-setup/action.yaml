@@ -1,26 +1,29 @@
 name: Set up GCP
+description: Perform necessary steps to set up gcloud CLI
 inputs:
   projectId:
     required: true
+    description: The GCP project id for which to set up OIDC
     type: string
   credentials:
     required: true
     type: string
+    description: Secret containing credentials
 runs:
   using: composite
   steps:
-   "id: gcp-auth",
+    - id: gcp-auth
       name: Authenticate with GCP
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ inputs.credentials }}
         project_id: ${{ inputs.projectId }}
 
-   "id: gcloud-setup",
+    - id: gcloud-setup
       name: Setup CLI
       uses: google-github-actions/setup-gcloud@v1
 
-   "id: gcloud-info",
+    - id: gcloud-info
       name: Print CLI info
       run: gcloud info
       shell: bash
