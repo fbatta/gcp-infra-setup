@@ -21,7 +21,7 @@ on:
 
 permissions:
   contents: read
-  id-token: read
+  id-token: write
 
 jobs:
   oidc-setup:
