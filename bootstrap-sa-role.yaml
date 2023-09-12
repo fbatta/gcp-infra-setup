@@ -1,0 +1,13 @@
+title: Infra bootstrap
+description: Set of permissions needed to bootstrap a new project
+stage: GA
+includedPermissions:
+- iam.serviceAccounts.create
+- iam.serviceAccounts.enable
+- iam.serviceAccounts.setIamPolicy
+- iam.googleapis.com/workloadIdentityPools.create
+- iam.googleapis.com/workloadIdentityPools.get
+- iam.googleapis.com/workloadIdentityPoolProviders.create
+- iam.googleapis.com/workloadIdentityPoolProviders.get
+- storage.buckets.create
+- storage.buckets.setIamPolicy

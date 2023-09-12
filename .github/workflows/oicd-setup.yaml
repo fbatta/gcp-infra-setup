@@ -14,10 +14,6 @@ on:
                 required: true
                 type: string
                 description: Name of the service account
-            createServiceAccount:
-                required: true
-                type: boolean
-                description: If true, create a new service account
             poolName:
                 required: false
                 type: string
@@ -42,20 +38,13 @@ jobs:
         name: Setup OIDC
         runs-on: ubuntu-latest
         steps:
-            - id: gcp-auth
+            - id: checkout
+              name: Checkout repo
+              uses: actions/checkout@v4
+
+            - id: gcp-setup
               name: Authenticate with GCP
-              uses: google-github-actions/auth@v1
-              with:
-                credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-                project_id: ${{ inputs.projectId }}
-
-            - id: gcloud-setup
-              name: Setup CLI
-              uses: google-github-actions/setup-gcloud@v1
-
-            - id: gcloud-info
-              name: Print CLI info
-              run: gcloud info
+              uses: ./.github/actions/gcp-setup.yaml
 
             - id: create-pool
               name: Create Workload identity pool
