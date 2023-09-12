@@ -28,7 +28,7 @@ fi
 PROJECT_INDEX=$(
     gcloud projects list --format="json" | jq '.[] | [ .projectId ]' | jq -s 'add | index( "${PROJECT_ID}" )'
 )
-if [ -n "$PROJECT_INDEX" ]; then
+if [ -z "$PROJECT_INDEX" ]; then
     echo "No project with ID $1 was found. Please check the project ID again."
     exit 1
 fi

@@ -44,7 +44,7 @@ jobs:
 
             - id: gcp-setup
               name: Authenticate with GCP
-              uses: ./.github/actions/gcp-setup.yaml
+              uses: ./.github/actions/gcp-setup
 
             - id: create-pool
               name: Create Workload identity pool
