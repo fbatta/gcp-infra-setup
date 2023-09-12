@@ -60,6 +60,7 @@ jobs:
         name: 🎹 Terraform synth
         uses: hashicorp/terraform-cdk-action@v0.1
         with:
-          mode: synth-only
+          mode: plan-only
+          stackName: bootstrap-iam bootstrap-oidc bootstrap-storage
           workingDirectory: ${{ env.WORKING_DIR }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
