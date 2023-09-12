@@ -22,13 +22,13 @@ export class OidcStack extends TerraformStack {
         });
 
         this.pool = new IamWorkloadIdentityPool(this, "workload-identity-pool", {
-            workloadIdentityPoolId: "github-pool",
-            displayName: "Github pool"
+            workloadIdentityPoolId: "gh-pool",
+            displayName: "Github pool",
         });
 
         new IamWorkloadIdentityPoolProvider(this, 'github-provider', {
             workloadIdentityPoolId: this.pool.workloadIdentityPoolId,
-            workloadIdentityPoolProviderId: "github",
+            workloadIdentityPoolProviderId: "gh-provider",
             displayName: "Github",
             attributeMapping: {
                 "google.subject": "assertion.sub",

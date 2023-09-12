@@ -46,7 +46,7 @@ jobs:
           credentials: ${{ secrets.GCP_CREDENTIALS }}
 
       - id: node-setup
-        name: 🔗 Setup Node 18.x
+        name: ⚙️ Setup Node 18.x
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -56,8 +56,8 @@ jobs:
         run: npm install
         working-directory: ${{ env.WORKING_DIR }}
 
-      - id: terraform-synth
-        name: 🎹 Terraform synth
+      - id: terraform-apply
+        name: ✅ Terraform apply
         uses: hashicorp/terraform-cdk-action@v0.1
         with:
           mode: auto-approve-apply
