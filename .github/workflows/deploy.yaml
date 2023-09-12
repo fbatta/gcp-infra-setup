@@ -19,6 +19,10 @@ on:
         type: string
         description: The repository allowed to impersonate the role (format org/repo-name)
 
+permissions:
+  contents: read
+  id-token: read
+
 jobs:
   oidc-setup:
     name: Setup OIDC
@@ -58,3 +62,4 @@ jobs:
         with:
           mode: synth-only
           workingDirectory: ${{ env.WORKING_DIR }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
