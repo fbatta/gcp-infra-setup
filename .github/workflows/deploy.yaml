@@ -10,6 +10,10 @@ on:
         required: true
         type: string
         description: The GCP region to target
+      bucketName:
+        required: true
+        type: string
+        description: Name of the bucket that contains the bootstrap Terraform stack
       repo:
         required: true
         type: string
@@ -21,6 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WORKING_DIR: ./tf
+      REPO_ID: ${{ inputs.repo }}
+      GCP_BUCKET: ${{ inputs.bucketName }}
+      GCP_PROJECT: ${{ inputs.projectId }}
+      GCP_REGION: ${{ inputs.region }}
     steps:
       - id: checkout
         name: 👀 Checkout repo
