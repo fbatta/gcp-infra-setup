@@ -45,6 +45,9 @@ jobs:
             - id: gcp-setup
               name: Authenticate with GCP
               uses: ./.github/actions/gcp-setup
+              with:
+                projectId: ${{ inputs.projectId }}
+                credentials: ${{ secrets.GCP_CREDENTIALS }}
 
             - id: create-pool
               name: Create Workload identity pool

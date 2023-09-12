@@ -1,4 +1,11 @@
 name: Set up GCP
+inputs:
+  projectId:
+    required: true
+    type: string
+  credentials:
+    required: true
+    type: string
 runs:
   using: composite
   steps:
@@ -6,7 +13,7 @@ runs:
       name: Authenticate with GCP
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+        credentials_json: ${{ inputs.credentials }}
         project_id: ${{ inputs.projectId }}
 
     - id: gcloud-setup
@@ -16,3 +23,4 @@ runs:
     - id: gcloud-info
       name: Print CLI info
       run: gcloud info
+      shell: bash
