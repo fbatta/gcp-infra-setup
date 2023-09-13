@@ -28,7 +28,7 @@ sh ./scripts/create-bootstrap-sa.sh project-id region
 
 Replace `project-id` and `region` with the relevant values for your project.
 
-### Result
+### Script result
 
 The previous script will do a bunch of things:
 
@@ -54,3 +54,11 @@ sh ./scripts/renew-sa-role-binding.sh project-id
 Replacing `project-id` with your own value.
 
 **Warning:** careful not to leak the private key anywhere. Once you add it to the repo secrets, best to remove it from your local machine
+
+### Preparing Github environment
+
+If the previous script was successful, it should print a message similar to this one:
+
+![Script completed successfully](docs/images/script-success.png)
+
+We'll need the project ID and bucket name for the next steps

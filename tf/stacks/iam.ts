@@ -10,7 +10,7 @@ import * as permissions from "../resources/iam/deployer-role-permissions.json";
 
 type IamStackProps = {
   workloadIdentityPoolId: string;
-  repositoryId: string;
+  repositoryIds: string;
   provider: GoogleProvider;
 }
 
@@ -18,7 +18,7 @@ export class IamStack extends TerraformStack {
   public serviceAccount: ServiceAccount;
   private provider: GoogleProvider;
 
-  constructor(scope: Construct, id: string, { workloadIdentityPoolId, repositoryId, provider }: IamStackProps) {
+  constructor(scope: Construct, id: string, { workloadIdentityPoolId, repositoryIds, provider }: IamStackProps) {
     super(scope, id);
 
     this.provider = provider;
@@ -49,7 +49,11 @@ export class IamStack extends TerraformStack {
     });
 
     new ServiceAccountIamBinding(this, 'sa-pool-binding', {
-      members: [`principalSet://iam.googleapis.com/${workloadIdentityPoolId}/attribute.repository/${repositoryId}`],
+      // GH doesn't support array inputs, so we let the user specify a comma-separated list,
+      // then we split it and trim any whitespace, and finally map it to the strings we need
+      members: repositoryIds.split(",")
+        .map((entry) => entry.trim())
+        .map((entry) => `principalSet://iam.googleapis.com/${workloadIdentityPoolId}/attribute.repository/${entry}`),
       role: "roles/iam.workloadIdentityUser",
       serviceAccountId: this.serviceAccount.name
     });

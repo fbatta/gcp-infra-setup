@@ -20,7 +20,7 @@ const { pool } = new OidcStack(app, "bootstrap-oidc", {
 });
 const { serviceAccount } = new IamStack(app, "bootstrap-iam", {
   workloadIdentityPoolId: pool.name,
-  repositoryId: env["REPO_ID"]!,
+  repositoryIds: env["REPO_IDS"]!,
   provider
 });
 new StorageStack(app, "bootstrap-storage", {
