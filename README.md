@@ -61,4 +61,17 @@ If the previous script was successful, it should print a message similar to this
 
 ![Script completed successfully](docs/images/script-success.png)
 
-We'll need the project ID and bucket name for the next steps
+We'll need the project ID and bucket name for the next steps.
+
+Let's go to our repo in Github: first thing, we add the credentials as described above. Next we go into the **Actions** tab: on the left-hand side we should see an action named **Deploy stack**. We click on it, and click on **Run workflow**.
+
+![Github workflow inputs](docs/images/gh-action-input.png)
+
+A list of inputs appear. We need to provide:
+
+- Project ID (printed by script)
+- Region
+- Bucket name (printed by script)
+- List of all the repos that can impersonate the deployer service account, in the format `org/repo-one,org/repo-two`
+
+Once we fill all of this, we click the green button and a new workflow is started for us. If it all goes well, the workflow completes without issues, and our bootstrapping is finally complete!
