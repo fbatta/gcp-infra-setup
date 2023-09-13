@@ -34,10 +34,23 @@ The previous script will do a bunch of things:
 
 - Enable the IAM API
 - Create a new service account called `infra-bootstrap`
-- Create a new role called `infra.bootstrap`
-- Assign the `infra.bootstrap` role to the `infra-bootstrap` service account
+- Create a new role called `infra.bootstrap` with the minimal set of permissions needed to run the Terraform stack
+- Assign the `infra.bootstrap` role to the `infra-bootstrap` service account **for the next 12 hours**
 - Create a new private key for the SA, and download it into a `sa_key.json` file inside this directory
+- Create a new storage bucket that will contain the Terraform stack state
 
-We'll use the contents of `sa_key.json` and add them to a `GCP_CREDENTIALS` 
+We'll use the contents of `sa_key.json` and add them to a `GCP_CREDENTIALS` secret in this same Github repository.
 
-**Warning:** careful not to leak the private key anywhere. Once you add it to the repo secrets, remove it from your local machine
+![GCP credentials secret in Github](docs/images/gcp-credentials-secret.png)
+
+It is important to note that the permissions we granted the `infra-bootstrap` service account will only be valid for 12 hours after they have been granted. The purpose of this account should be quite short-lived, so it's better to revoke permissions if they are not used.
+
+In case you need to renew the policy binding for a further 12 hours, you can run:
+
+```
+sh ./scripts/renew-sa-role-binding.sh project-id
+```
+
+Replacing `project-id` with your own value.
+
+**Warning:** careful not to leak the private key anywhere. Once you add it to the repo secrets, best to remove it from your local machine

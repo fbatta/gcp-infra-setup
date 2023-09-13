@@ -4,17 +4,28 @@ import { IamStack } from "./stacks/iam";
 import { OidcStack } from "./stacks/oidc";
 import { StorageStack } from "./stacks/storage";
 import { env } from "process";
+import { GoogleProvider } from "@cdktf/provider-google/lib/provider";
 
 config();
 
 const app = new App();
-const { pool } = new OidcStack(app, "bootstrap-oidc");
+
+const provider = new GoogleProvider(app, "provider", {
+  project: env["GCP_PROJECT"],
+  region: env["GCP_REGION"]
+});
+
+const { pool } = new OidcStack(app, "bootstrap-oidc", {
+  provider
+});
 const { serviceAccount } = new IamStack(app, "bootstrap-iam", {
   workloadIdentityPoolId: pool.name,
-  repositoryId: env["REPO_ID"]!
+  repositoryId: env["REPO_ID"]!,
+  provider
 });
 new StorageStack(app, "bootstrap-storage", {
-  saEmail: serviceAccount.email
+  saEmail: serviceAccount.email,
+  provider
 });
 
 app.synth();

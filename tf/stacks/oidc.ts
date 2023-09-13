@@ -1,25 +1,27 @@
-import { GoogleProvider } from "@cdktf/provider-google/lib/provider";
 import { env } from "process";
 import { GcsBackend, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
 import { IamWorkloadIdentityPool } from "@cdktf/provider-google/lib/iam-workload-identity-pool";
 import { IamWorkloadIdentityPoolProvider } from "@cdktf/provider-google/lib/iam-workload-identity-pool-provider";
+import { GoogleProvider } from "@cdktf/provider-google/lib/provider";
+
+type OidcStackProps = {
+    provider: GoogleProvider;
+}
 
 export class OidcStack extends TerraformStack {
     public pool: IamWorkloadIdentityPool;
+    private provider: GoogleProvider;
 
-    constructor(scope: Construct, id: string) {
+    constructor(scope: Construct, id: string, { provider }: OidcStackProps) {
         super(scope, id);
+
+        this.provider = provider;
 
         new GcsBackend(this, {
             bucket: env["GCP_BUCKET"]!!,
-            prefix: "tf/oidc/state"
+            prefix: `tf/${this.provider.project}/oidc/state`
           });
-      
-        new GoogleProvider(this, "provider", {
-            project: env["GCP_PROJECT"],
-            region: env["GCP_REGION"]
-        });
 
         this.pool = new IamWorkloadIdentityPool(this, "workload-identity-pool", {
             workloadIdentityPoolId: "gh-pool",

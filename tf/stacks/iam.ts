@@ -11,22 +11,21 @@ import * as permissions from "../resources/iam/deployer-role-permissions.json";
 type IamStackProps = {
   workloadIdentityPoolId: string;
   repositoryId: string;
+  provider: GoogleProvider;
 }
 
 export class IamStack extends TerraformStack {
   public serviceAccount: ServiceAccount;
+  private provider: GoogleProvider;
 
-  constructor(scope: Construct, id: string, { workloadIdentityPoolId, repositoryId }: IamStackProps) {
+  constructor(scope: Construct, id: string, { workloadIdentityPoolId, repositoryId, provider }: IamStackProps) {
     super(scope, id);
 
-    new GcsBackend(this, {
-      bucket: env["GCP_BUCKET"]!!,
-      prefix: "tf/iam/state"
-    });
+    this.provider = provider;
 
-    const provider = new GoogleProvider(this, "provider", {
-      project: env["GCP_PROJECT"],
-      region: env["GCP_REGION"]
+    new GcsBackend(this, {
+      bucket: env["GCP_BUCKET"]!,
+      prefix: `tf/${this.provider.project}/iam/state`
     });
 
     this.serviceAccount = new ServiceAccount(this, "deployer-sa", {

@@ -7,21 +7,21 @@ import { StorageBucketIamBinding } from "@cdktf/provider-google/lib/storage-buck
 
 type StorageStackProps = {
     saEmail: string;
+    provider: GoogleProvider;
 }
 
 export class StorageStack extends TerraformStack {
-    constructor(scope: Construct, id: string, { saEmail }: StorageStackProps) {
+    private provider: GoogleProvider;
+
+    constructor(scope: Construct, id: string, { saEmail, provider }: StorageStackProps) {
         super(scope, id);
+
+        this.provider = provider;
 
         new GcsBackend(this, {
             bucket: env["GCP_BUCKET"]!,
-            prefix: "tf/storage/state"
+            prefix: `tf/${this.provider.project}/storage/state`
           });
-      
-        const provider = new GoogleProvider(this, "provider", {
-            project: env["GCP_PROJECT"],
-            region: env["GCP_REGION"]
-        });
 
         const bucket = new StorageBucket(this, "stack-bucket", {
             location: provider.region!,
